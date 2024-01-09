@@ -13,6 +13,12 @@ const options = {
   method: 'GET'
 };
 
+const secondOptions = {
+  hostname: 'course-checker.onrender.com',
+  path: '/',
+  method: 'GET',
+};
+
 const selfOption = {
   hostname: process.env.SELF_DOMAIN,
   port: process.env.PORT,
@@ -30,6 +36,15 @@ async function autoRefresh() {
   // });
   req.end();
 };
+
+async function secondRefresh() {
+  const req = https.request(secondOptions, res => {
+    console.log(`Status code: ${res.statusCode}, Sucessfully sent req to ${process.env.HOST_DOMAIN}`);
+
+  });
+
+  req.end();
+}
 
 async function selfRefresh() {
   // Testing on local host: using http instead of https
@@ -56,7 +71,7 @@ server.get('/', async (req, res) => {
   });
 
   } catch (err) {
-      selfRefresh();
+      await selfRefresh();
       res.status(400).json({
         message: `Error`
       });
